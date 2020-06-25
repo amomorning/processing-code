@@ -9,8 +9,10 @@ import processing.core.PApplet;
  * @date: 2020/06/16
  */
 public class Show extends PApplet {
+    // Window size
     int N = 600;
 
+    // Circle without diffusion
     int[][] pt = new int[][]{{200, 360},  {400, 200}, {400, 500}};
     int[] r = new int[]{50, 30, 60};
 
@@ -128,6 +130,7 @@ public class Show extends PApplet {
 
     }
 
+    // Check if inside circle
     private boolean checkCircle(int x, int y) {
         for(int i = 0; i < pt.length; ++ i) {
             if((x-pt[i][0])*(x-pt[i][0]) + (y-pt[i][1])*(y-pt[i][1]) < r[i] * r[i]) {
