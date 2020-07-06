@@ -70,8 +70,8 @@ public class Show extends PApplet {
 
     public void mouseDragged() {
         if(locked) {
-            bx = mouseX-xOffset;
-            by = mouseY-yOffset;
+            bx = mouseX - xOffset;
+            by = mouseY - yOffset;
         }
     }
 
