@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="gzf">
+    <CLASSES>
+      <root url="file://C:/Program Files/Java/gzf" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://C:/Program Files/Java/gzf" />
+    </SOURCES>
+    <jarDirectory url="file://C:/Program Files/Java/gzf" recursive="false" />
+    <jarDirectory url="file://C:/Program Files/Java/gzf" recursive="false" type="SOURCES" />
+  </library>
+</component>
