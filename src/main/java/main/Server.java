@@ -21,16 +21,14 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(48201), 0);
-        System.out.println("Server bind to 35553..");
+        System.out.println("Server bind to 48201..");
         server.createContext("", new FileHandler());
     }
 
     static class FileHandler implements HttpHandler {
 
-        /**
-         *
-         */
         public void handle(HttpExchange exchange) {
 
         }
+    }
 }

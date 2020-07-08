@@ -21,6 +21,8 @@ var canvasWidth;
 var canvasHeight;
 var clock = new THREE.Clock();
 
+var stats;
+
 init();
 animate();
 
@@ -54,7 +56,7 @@ function init() {
 
 	var geometry = new THREE.CubeGeometry( 100, 100, 100 );
 
-	for ( var i = 0; i < 10; i ++ ) {
+	for ( var i = 0; i < 2; i ++ ) {
 
 		var object = new THREE.Mesh( geometry,
 			new THREE.MeshLambertMaterial(
@@ -89,6 +91,7 @@ function init() {
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setSize(canvasWidth, canvasHeight);
+	renderer.setClearColor(new THREE.Color(0xFFFFFF));
 	document.body.appendChild(renderer.domElement);
 
 	var container = document.getElementById('container');
@@ -99,6 +102,29 @@ function init() {
 	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
 	cameraControls = new OrbitControls( camera, renderer.domElement );
+
+	stats = initStats();
+	initGUI();
+
+	window.addEventListener('resize', onResize, false);
+
+}
+
+function initGUI() {
+	var controls = new function () {
+		this.ssss = 0.5;
+		this.test = 4;
+	}
+
+	var gui = new dat.GUI();
+	gui.add(controls, 'ssss', 0, 1);
+	gui.add(controls, 'test', 2, 13 );
+}
+
+function onResize() {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function onDocumentMouseDown( event ) {
@@ -130,9 +156,19 @@ function onDocumentMouseDown( event ) {
 
 }
 
+function initStats(type) {
+	var panelType = (typeof type != 'undefined' && type) && (!isNaN(type)) ? parseInt(type) : 0;
+
+	var stats = new Stats();
+	stats.showPanel(panelType);
+	document.body.appendChild(stats.dom);
+	return stats;
+}
+
 //
 
 function animate() {
+	stats.update();
 	window.requestAnimationFrame(animate);
 	render();
 }
