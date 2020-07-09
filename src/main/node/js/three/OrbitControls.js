@@ -80,9 +80,9 @@ let OrbitControls = function(object, domElement) {
 
   // Mouse buttons
   this.mouseButtons = {
-    LEFT: THREE.MOUSE.LEFT,
+    LEFT: THREE.MOUSE.RIGHT,
     MIDDLE: THREE.MOUSE.MIDDLE,
-    RIGHT: THREE.MOUSE.RIGHT
+    RIGHT: THREE.MOUSE.LEFT
   };
 
   // for reset

@@ -8,7 +8,7 @@
 // Mostly grabbed from http://mrdoob.github.com/three.js/examples/canvas_interactive_cubes.html
 // Author unknown.
 
-var cameraControls;
+var controls;
 var camera, scene, projector, renderer;
 var sphereMaterial;
 
@@ -33,30 +33,14 @@ function init() {
 
 	camera = new THREE.PerspectiveCamera( 70, canvasRatio, 1, 10000 );
 	camera.position.set( 0, 300, 500 );
-	scene = new THREE.Scene();
 
-	headlight = new THREE.PointLight( 0xFFFFFF, 0.3 );
+	initScene();
 
-	scene.add( headlight );
-
-	var light = new THREE.DirectionalLight( 0xFFFFFF, 0.6 );
-	light.position.set( 200, 500, 500 );
-
-	scene.add( light );
-
-	light = new THREE.DirectionalLight( 0xFFFFFF, 0.6 );
-	light.position.set( 0, 200, -300 );
-
-	scene.add( light );
-
-	light = new THREE.DirectionalLight( 0xFFFFFF, 0.4 );
-	light.position.set( -400, -300, 200 );
-
-	scene.add( light );
+	initLight();
 
 	var geometry = new THREE.CubeGeometry( 100, 100, 100 );
 
-	for ( var i = 0; i < 2; i ++ ) {
+	for ( var i = 0; i < 10; i ++ ) {
 
 		var object = new THREE.Mesh( geometry,
 			new THREE.MeshLambertMaterial(
@@ -101,14 +85,45 @@ function init() {
 
 	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
-	cameraControls = new OrbitControls( camera, renderer.domElement );
 
-	stats = initStats();
+	initStats();
 	initGUI();
+	initControls();
+
 
 	window.addEventListener('resize', onResize, false);
 
 }
+
+
+function initScene() {
+	scene = new THREE.Scene();
+    var axesHelper = new THREE.AxesHelper( 5000 );
+    scene.add( axesHelper );
+}
+
+function initLight() {
+	headlight = new THREE.PointLight( 0xFFFFFF, 0.3 );
+
+	scene.add( headlight );
+
+	var light = new THREE.DirectionalLight( 0xFFFFFF, 0.6 );
+	light.position.set( 200, 500, 500 );
+
+	scene.add( light );
+
+	light = new THREE.DirectionalLight( 0xFFFFFF, 0.6 );
+	light.position.set( 0, 200, -300 );
+
+	scene.add( light );
+
+	light = new THREE.DirectionalLight( 0xFFFFFF, 0.4 );
+	light.position.set( -400, -300, 200 );
+
+	scene.add( light );
+
+}
+
 
 function initGUI() {
 	var controls = new function () {
@@ -155,14 +170,25 @@ function onDocumentMouseDown( event ) {
 
 
 }
+function initControls() {
 
-function initStats(type) {
-	var panelType = (typeof type != 'undefined' && type) && (!isNaN(type)) ? parseInt(type) : 0;
+    controls = new OrbitControls(camera, renderer.domElement);
 
-	var stats = new Stats();
-	stats.showPanel(panelType);
+    // 使动画循环使用时阻尼或自转 意思是否有惯性
+    controls.enableDamping = true;
+    //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+    controls.dampingFactor = 0.25;
+
+    controls.minDistance = 20;
+    controls.maxDistance = 6000;
+    controls.enablePan = false;
+    controls.enableZoom = true;
+}
+
+
+function initStats() {
+	stats = new Stats();
 	document.body.appendChild(stats.dom);
-	return stats;
 }
 
 //
@@ -170,22 +196,5 @@ function initStats(type) {
 function animate() {
 	stats.update();
 	window.requestAnimationFrame(animate);
-	render();
-}
-
-var radius = 600;
-var theta = 0;
-
-function render() {
-
-	theta += 0.1;
-
-	camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
-	camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
-	camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
-	camera.lookAt( scene.position );
-	headlight.position.copy( camera.position );
-
-
 	renderer.render( scene, camera );
 }
