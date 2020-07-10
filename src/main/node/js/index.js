@@ -157,7 +157,7 @@ function onDocumentMouseDown( event ) {
 
 	if ( intersects.length > 0 ) {
 
-		intersects[ 0 ].object.material.color.setRGB( Math.random(), Math.random(), Math.random() );
+		intersects[0].object.material.color.setRGB( Math.random(), Math.random(), Math.random() );
 
 		var sphere = new THREE.Mesh( sphereGeom, sphereMaterial );
 
