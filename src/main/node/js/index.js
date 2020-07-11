@@ -6,7 +6,7 @@
 /*global THREE, document, window*/
 
 // Mostly grabbed from http://mrdoob.github.com/three.js/examples/canvas_interactive_cubes.html
-// Author unknown.
+// Author amomorning
 
 var controls;
 var camera, scene, projector, renderer;
@@ -32,11 +32,15 @@ function init() {
 	var canvasRatio = canvasWidth / canvasHeight;
 
 	camera = new THREE.PerspectiveCamera( 70, canvasRatio, 1, 10000 );
-	camera.position.set( 0, 300, 500 );
+	camera.position.set( 600, 100, 500 );
+    camera.up = new THREE.Vector3(0, 0, 1)
+
 
 	initScene();
 
 	initLight();
+
+	testIO();
 
 	var geometry = new THREE.CubeGeometry( 100, 100, 100 );
 
@@ -49,9 +53,10 @@ function init() {
 			);
 
 		// add a random box between -400 to +400
-		object.position.x = Math.random() * 800 - 400;
-		object.position.y = Math.random() * 800 - 400;
-		object.position.z = Math.random() * 800 - 400;
+		var a = 400;
+		object.position.x = Math.random() * a * 2 - a;
+		object.position.y = Math.random() * a * 2 - a;
+		object.position.z = Math.random() * a * 2 - a;
 
 		// make box randomly scale by 1 to 3x
 		object.scale.x = Math.random() * 2 + 1;
@@ -71,6 +76,7 @@ function init() {
 	}
 
 	sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xD0D0D0 } );
+	sphereGeom = new THREE.SphereGeometry( 6, 12, 6 );
 
 
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -81,20 +87,30 @@ function init() {
 	var container = document.getElementById('container');
 	container.appendChild( renderer.domElement );
 
-	sphereGeom = new THREE.SphereGeometry( 6, 12, 6 );
 
-	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 
 
 	initStats();
-	initGUI();
 	initControls();
 
 
+	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 	window.addEventListener('resize', onResize, false);
+
 
 }
 
+
+function testIO() {
+	var socket = io();
+	socket.on('xxx',async function(message){
+		console.log('hello world');
+		console.log('hello' + message)
+	});
+	socket.emit('event', 'hello');
+	socket.send('disconnect', function(){});
+
+}
 
 function initScene() {
 	scene = new THREE.Scene();
@@ -124,18 +140,6 @@ function initLight() {
 
 }
 
-
-function initGUI() {
-	var controls = new function () {
-		this.ssss = 0.5;
-		this.test = 4;
-	}
-
-	var gui = new dat.GUI();
-	gui.add(controls, 'ssss', 0, 1);
-	gui.add(controls, 'test', 2, 13 );
-}
-
 function onResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
@@ -144,8 +148,8 @@ function onResize() {
 
 function onDocumentMouseDown( event ) {
 
-	var raycaster = new THREE.Raycaster(); // create once
-	var mouse = new THREE.Vector2(); // create once
+	var raycaster = new THREE.Raycaster(); 
+	var mouse = new THREE.Vector2(); 
 	mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
 	mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 	
@@ -153,8 +157,6 @@ function onDocumentMouseDown( event ) {
 	
 	var intersects = raycaster.intersectObjects( objects, false );
 		
-
-
 	if ( intersects.length > 0 ) {
 
 		intersects[0].object.material.color.setRGB( Math.random(), Math.random(), Math.random() );
@@ -167,16 +169,13 @@ function onDocumentMouseDown( event ) {
 		sphere.position.z = intersects[0].point.z;
 		scene.add( sphere );
 	}
-
-
 }
+
 function initControls() {
 
     controls = new OrbitControls(camera, renderer.domElement);
 
-    // 使动画循环使用时阻尼或自转 意思是否有惯性
     controls.enableDamping = true;
-    //动态阻尼系数 就是鼠标拖拽旋转灵敏度
     controls.dampingFactor = 0.25;
 
     controls.minDistance = 20;
@@ -191,7 +190,6 @@ function initStats() {
 	document.body.appendChild(stats.dom);
 }
 
-//
 
 function animate() {
 	stats.update();

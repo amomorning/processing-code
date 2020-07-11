@@ -11,6 +11,10 @@
   "dependencies": {
     "koa": "^2.13.0",
     "koa-router": "^9.1.0",
-    "mime": "^2.4.6"
+    "mime": "^2.4.6",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "koa-webpack": "^5.3.0"
   }
 }
