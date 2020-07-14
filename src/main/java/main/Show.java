@@ -1,12 +1,22 @@
 package main;
 
 import Guo_Cam.CameraController;
+import org.kabeja.dxf.*;
+import org.kabeja.parser.DXFParser;
+import org.kabeja.parser.Parser;
+import org.kabeja.parser.ParserBuilder;
 import processing.core.PApplet;
+import readDXF.DXFImport;
+import wblut.geom.WB_Point;
+import wblut.geom.WB_Polygon;
 import wblut.hemesh.HEC_Cylinder;
 import wblut.hemesh.HES_CatmullClark;
 import wblut.hemesh.HE_Mesh;
 import wblut.processing.WB_Render;
 import wblut.processing.WB_Render3D;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @classname: simpleProcessing
@@ -15,45 +25,55 @@ import wblut.processing.WB_Render3D;
  * @date: 2020/06/16
  */
 public class Show extends PApplet {
-    public HE_Mesh mesh;
-    public WB_Render3D render;
-    public CameraController cam;
+    private WB_Render3D render;
+    private CameraController cam;
+    private List<WB_Polygon> plys;
 
     public void settings() {
         size(1000, 1000, P3D);
-        smooth(8);
     }
 
     public void setup() {
-        createMesh();
         cam = new CameraController(this, 1000);
-
-        HES_CatmullClark subdividor = new HES_CatmullClark();
-        subdividor.setKeepBoundary(true);// preserve position of vertices on a surface boundary
-        subdividor.setKeepEdges(true);// preserve position of vertices on edge of selection (only useful if using subdivideSelected)
-        subdividor.setBlendFactor(1.0); //controls how much the vertices are moved: 0.0=planar, 1.0=true Catmull-Clark
-        mesh.subdivide(subdividor, 3);
+        cam.top();
 
         render = new WB_Render(this);
+        plys = readDXF("./model/aaa-eth.dxf", "brokenLine");
     }
 
 
     public void draw() {
-        background(55);
-        cam.drawSystem(1000);
-        directionalLight(255, 255, 255, 1, 1, -1);
-        directionalLight(127, 127, 127, -1, -1, 1);
-        fill(255);
-        noStroke();
-        render.drawFaces(mesh);
-        stroke(0);
-        render.drawEdges(mesh);
+        background(255);
+        fill(0);
+
+        render.drawPolygonEdges(plys);
+
     }
 
-    void createMesh() {
-        HEC_Cylinder creator = new HEC_Cylinder();
-        creator.setFacets(6).setSteps(1).setRadius(250).setHeight(500).setCap(true, false);
-        mesh = new HE_Mesh(creator);
+    private List<WB_Polygon> readDXF(String filename, String layerName) {
+        Parser parser = ParserBuilder.createDefaultParser();
+        DXFDocument doc = null;
+        try {
+            parser.parse(filename, DXFParser.DEFAULT_ENCODING);
+            doc = parser.getDocument();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return DXFPolyline(doc.getDXFLayer(layerName));
     }
 
+    private List<WB_Polygon> DXFPolyline(DXFLayer layer) {
+        List<DXFPolyline> pls = layer.getDXFEntities(DXFConstants.ENTITY_TYPE_POLYLINE);
+        List<WB_Polygon> polygons = new ArrayList<WB_Polygon>();
+        for (DXFPolyline pl : pls) {
+            WB_Point[] pts = new WB_Point[pl.getVertexCount()];
+            for (int j = 0; j < pts.length; j++) {
+                DXFVertex v = pl.getVertex(j);
+                pts[j] = new WB_Point(v.getX(), v.getY());
+            }
+            polygons.add(new WB_Polygon(pts));
+        }
+        return polygons;
+    }
 }

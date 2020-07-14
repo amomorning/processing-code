@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Import-DXF">
+    <CLASSES>
+      <root url="file://C:/Program Files/Java/Import-DXF" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://C:/Program Files/Java/Import-DXF" />
+    </SOURCES>
+    <jarDirectory url="file://C:/Program Files/Java/Import-DXF" recursive="false" />
+  </library>
+</component>
