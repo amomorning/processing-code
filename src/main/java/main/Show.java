@@ -9,9 +9,6 @@ import processing.core.PApplet;
 import readDXF.DXFImport;
 import wblut.geom.WB_Point;
 import wblut.geom.WB_Polygon;
-import wblut.hemesh.HEC_Cylinder;
-import wblut.hemesh.HES_CatmullClark;
-import wblut.hemesh.HE_Mesh;
 import wblut.processing.WB_Render;
 import wblut.processing.WB_Render3D;
 
