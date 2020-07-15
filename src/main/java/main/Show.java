@@ -67,9 +67,11 @@ public class Show extends PApplet {
             WB_Point[] pts = new WB_Point[pl.getVertexCount()];
             for (int j = 0; j < pts.length; j++) {
                 DXFVertex v = pl.getVertex(j);
+                System.out.println(v.getX() + " " + v.getY());
                 pts[j] = new WB_Point(v.getX(), v.getY());
             }
             polygons.add(new WB_Polygon(pts));
+            System.out.println();
         }
         return polygons;
     }
