@@ -10,72 +10,28 @@ import processing.core.PApplet;
  */
 public class Show extends PApplet {
 
-    float bx, by;
-    int boxSize = 75;
-    boolean overBox = false;
-    boolean locked = false;
-    float xOffset = 0.0f;
-    float yOffset = 0.0f;
 
     public void settings() {
-        size(1000, 1000, P2D);
+        size(1600, 900, P2D);
 
     }
 
     public void setup() {
-        bx = width/2.0f;
-        by = height/2.0f;
-        rectMode(RADIUS);
-    }
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                float distanceFromTopLeft = dist(x, y, 0, 0);
+                float distanceFromTopRight = dist(x, y, width, 0);
+                float distanceFromBottomLeft = dist(x, y, 0, 0);
 
-
-
-    public void draw(){
-        background(0);
-
-        // Test if the cursor is over the box
-        if (mouseX > bx-boxSize && mouseX < bx+boxSize &&
-                mouseY > by-boxSize && mouseY < by+boxSize) {
-            overBox = true;
-            if(!locked) {
-                stroke(255);
-                fill(153);
+                stroke(distanceFromTopLeft/width*210, distanceFromTopRight/width*190, distanceFromBottomLeft/height*200);
+                point(x, y);
             }
-        } else {
-            stroke(153);
-            fill(153);
-            overBox = false;
-        }
-
-        // Draw the box
-        rect(bx, by, boxSize, boxSize);
-    }
-
-
-    public void keyPressed() {
-
-    }
-
-    public void mousePressed() {
-        if(overBox) {
-            locked = true;
-            fill(255, 255, 255);
-        } else {
-            locked = false;
-        }
-        xOffset = mouseX-bx;
-        yOffset = mouseY-by;
-
-    }
-
-    public void mouseDragged() {
-        if(locked) {
-            bx = mouseX - xOffset;
-            by = mouseY - yOffset;
         }
     }
 
-    public void mouseReleased() {
-        locked = false;
+    public void draw() {
+
     }
+
+
 }
