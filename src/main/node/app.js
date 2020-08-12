@@ -63,6 +63,20 @@ io.on('connection', client => {
     client.on('disconnect', async function () {
         console.log('disconnect :)');
     });
+
+    client.on('initCanvas', async function (message) {
+        io.emit('queryCanvasSize', 'ww');
+    });
+
+    client.on('changeCanvas', async function (message) {
+        console.log('change: ' + message);
+        io.emit('changeCanvasSize', message);
+    });
+
+    client.on('parametersExchange', async function (message) {
+        console.log('parametersExchange: ' + message);
+        io.emit('receiveParameters', message);
+    });
 });
 
 http.listen(23810, () => {
