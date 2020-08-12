@@ -22,16 +22,32 @@ function IOUtils() {
 		setCanvasSize(canvasSize.width, canvasSize.height);
 	});
 
+	socket.on('receiveGeometry', async function(message){
+		// clear scene
+		while(scene.children.length > 0){ 
+			scene.remove(scene.children[0]); 
+		}
+		console.log('scene cleared')
+		// get geometry
+		var geo = parseGeometry(JSON.parse(message));
+		var material = new THREE.MeshBasicMaterial( { color: controls.typeColor, side: THREE.DoubleSide } );
+		var mesh = new THREE.Mesh( geo, material );
+		scene.add( mesh );
+		
+		renderer.render( scene, camera );
+
+	});
+
 }
 
 function setCanvasSize(width, height) {
 	var canvasRatio = width / height;
-	windowScale = 12;
+	windowScale = 1000;
 	var windowWidth = windowScale * canvasRatio;
 	var windowHeight = windowScale;
 
 	camera = new THREE.OrthographicCamera( windowWidth / - 2, windowWidth / 2, windowHeight / 2, windowHeight / - 2, 0, 40 )
-	var focus = new THREE.Vector3( 5,5,0 );
+	var focus = new THREE.Vector3( windowWidth / 2, windowHeight / 2, 0 );
 	camera.position.x = focus.x;
 	camera.position.y = focus.y;
 	camera.position.z = 10;
@@ -71,6 +87,21 @@ var saveFile = function (strData, filename) {
 	}
 }
 
+function parseGeometry(geomJson) {
+	var geo = new THREE.Geometry();
+	for(var i = 0; i < geomJson.verts.length; ++ i) {
+		var vt = geomJson.verts[i];
+		geo.vertices.push(new THREE.Vector3(vt[0], vt[1], vt[2]));
+	}
+	
+	for(var i = 0; i < geomJson.faces.length; ++ i) {
+		var fs = geomJson.faces[i];
+		geo.faces.push(new THREE.Face3(fs[0], fs[1], fs[2]));
+	}
+
+	return geo;
+}
+
 
 function PolygonGeometry(sides, location, radius) {
 	var geo = new THREE.Geometry();
@@ -83,6 +114,7 @@ function PolygonGeometry(sides, location, radius) {
 
 		var x = radius * Math.cos(angle) + location.x;
 		var y = radius * Math.sin(angle) + location.y;
+		console.log(x, y);
 
 		// Save the vertex location
 		geo.vertices.push( new THREE.Vector3( x, y, 0.0 ) );
@@ -104,6 +136,7 @@ function init() {
 
 	// scene
 	scene = new THREE.Scene();
+	scene.autoUpdate = true;
 	renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true});
 
 	
@@ -111,7 +144,7 @@ function init() {
 
 	renderer.gammaInput = true;
 	renderer.gammaOutput = true;
-	renderer.setClearColor(new THREE.Color(0xFFFFFF));
+	renderer.setClearColor(new THREE.Color(0xC0C0C0));
 
 	socket.emit('initCanvas', 'ww');
 }
@@ -129,7 +162,8 @@ function addToDOM() {
 // Main body of the script
 try {
 	init();
-	var geo = PolygonGeometry(9, new THREE.Vector3( 5, 5, 0 ), 4);
+	var geo = parseGeometry(JSON.parse('{"verts":[[30, 30, 0],[70, 30, 0],[70, 70, 0],[30, 70, 0]],"faces":[[0,1,3],[1,2,3]]}'));
+	console.log(geo.vertices);
 	var material = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.FrontSide } );
 	var mesh = new THREE.Mesh( geo, material );
 	scene.add( mesh );
