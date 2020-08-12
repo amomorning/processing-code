@@ -5,8 +5,8 @@ var controls = new function () {
     this.angPoi = 0.0;
     this.typeColor = '#000000';
 
-    this.LinNum_X = 3;
-    this.LinNum_Y = 4;
+    this.LinNum_X = 1;
+    this.LinNum_Y = 1;
     this.shiL_X = false;
     this.shiL_Y = false;
     this.shiP_X = false;
@@ -15,7 +15,6 @@ var controls = new function () {
     
 
     this.update = function() {
-        renderer.setSize(300, 300);
         socket.emit('parametersExchange', JSON.stringify(this));
     };
     this.save = function() {
@@ -32,8 +31,8 @@ element.addColor(controls, 'typeColor');
 element.open();
 
 var space = gui.addFolder('Space Parameters');
-space.add(controls, 'LinNum_X', 2, 13).step(1);
-space.add(controls, 'LinNum_Y', 2, 13).step(1);
+space.add(controls, 'LinNum_X', 1, 15).step(1);
+space.add(controls, 'LinNum_Y', 1, 15).step(1);
 space.add(controls, 'shiL_X');
 space.add(controls, 'shiL_Y');
 space.add(controls, 'shiP_X');

@@ -44,38 +44,32 @@ app.use(static(__dirname));
 app.use(router.routes());
 
 
-io.on('connection', client => {
-    console.log('a user connected');
-    client.on('message', async function (message) {
-        console.log(message);
-    });
+io.on('connection', socket => {
+    console.info(`Client connected [id=${client.id}]`);
   
-    client.on('event', async function (message) {
-        console.log('event: ' + message);
-        io.emit('xxx', 'ww');
-    });
-    
-    client.on('create', async function (message) {
-        console.log('create:');
-        io.emit('cube', 'ww');
-    });
-  
-    client.on('disconnect', async function () {
-        console.log('disconnect :)');
+    socket.on('disconnect', async function () {
+        console.info(`Client [id=${client.id}] disconnect :)`);
     });
 
-    client.on('initCanvas', async function (message) {
+    socket.on('initCanvas', async function (message) {
+        console.log(`Client [id=${client.id}] initCanvas`);
         io.emit('queryCanvasSize', 'ww');
     });
 
-    client.on('changeCanvas', async function (message) {
+    socket.on('changeCanvas', async function (message) {
         console.log('change: ' + message);
         io.emit('changeCanvasSize', message);
     });
 
-    client.on('parametersExchange', async function (message) {
+    socket.on('parametersExchange', async function (message) {
         console.log('parametersExchange: ' + message);
         io.emit('receiveParameters', message);
+
+    });
+
+    socket.on('geometryExchange', async function(message) {
+        console.log('geometryExchange: ' + message);
+        io.emit('receiveGeometry', message);
     });
 });
 
