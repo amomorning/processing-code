@@ -45,14 +45,14 @@ app.use(router.routes());
 
 
 io.on('connection', socket => {
-    console.info(`Client connected [id=${client.id}]`);
-  
+    console.info(`Client connected [id=${socket.id}]`);
+    socket_id = 0;
     socket.on('disconnect', async function () {
-        console.info(`Client [id=${client.id}] disconnect :)`);
+        console.info(`Client [id=${socket.id}] disconnect :)`);
     });
 
     socket.on('initCanvas', async function (message) {
-        console.log(`Client [id=${client.id}] initCanvas`);
+        console.log(`Client [id=${socket.id}] initCanvas`);
         io.emit('queryCanvasSize', 'ww');
     });
 
@@ -64,12 +64,16 @@ io.on('connection', socket => {
     socket.on('parametersExchange', async function (message) {
         console.log('parametersExchange: ' + message);
         io.emit('receiveParameters', message);
+        socket_id = socket.id;
 
+        console.log(socket_id);
+        return socket_id;
     });
 
     socket.on('geometryExchange', async function(message) {
         console.log('geometryExchange: ' + message);
-        io.emit('receiveGeometry', message);
+        io.to(socket_id).emit('receiveGeometry', message);
+        console.log(socket_id);
     });
 });
 
