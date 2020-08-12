@@ -12,3 +12,8 @@ As a template, it's also an example from [processing.org](https://processing.org
 ### hemesh
 HE_Mesh template with camera controller
 ![](https://github.com/amomorning/processing-code/blob/hemesh/fig/XhpK4nms4w.gif)
+
+
+### color 
+color blender
+![](https://github.com/amomorning/processing-code/blob/color/fig/color.png)
