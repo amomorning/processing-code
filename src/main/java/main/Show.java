@@ -1,6 +1,10 @@
 package main;
 
 import processing.core.PApplet;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+
+import java.net.URISyntaxException;
 
 /**
  * @classname: simpleProcessing
@@ -10,6 +14,7 @@ import processing.core.PApplet;
  */
 public class Show extends PApplet {
 
+    public Socket socket;
 
     public void settings() {
         size(1000, 1000, P2D);
@@ -20,6 +25,13 @@ public class Show extends PApplet {
         background(255, 122, 0);
         mouseX = -0x3f;
         mouseY = -0x3f;
+
+        try {
+            socket = IO.socket("http://127.0.0.1:23810");
+            socket.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -30,6 +42,16 @@ public class Show extends PApplet {
         }
     }
 
+    public void keyPressed() {
+        if(key == 's' || key == 'S') {
+            if(socket != null) {
+                socket.emit("create", "hello from java");
+            }
+        }
 
+        if(key == 'i' || key == 'I') {
+
+        }
+    }
 
 }
