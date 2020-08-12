@@ -1,0 +1,50 @@
+<component name="libraryTable">
+  <library name="hemesh">
+    <CLASSES>
+      <root url="jar://C:/Program Files/Java/hemesh/library/arpack-combo.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/csparsej.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/eclipse-collections-9.0.0.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/eclipse-collections-api-9.0.0.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/exp4j-0.4.7.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/hemesh-data-3_0_0.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/hemesh-external-4_0_0.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/hemesh-external-6_0_0.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/hemesh-lab.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/hemesh.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/javaluator-3.0.2.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/jplasma.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/jtransforms.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/jts-1.14.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/junit.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/netlib-java.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/optimization.jar!/" />
+      <root url="jar://C:/Program Files/Java/hemesh/library/parallelcolt-0.9.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://C:/Program Files/Java/hemesh/src/core" />
+      <root url="file://C:/Program Files/Java/hemesh/src/factory" />
+      <root url="file://C:/Program Files/Java/hemesh/src/geodesic" />
+      <root url="file://C:/Program Files/Java/hemesh/src/geom" />
+      <root url="file://C:/Program Files/Java/hemesh/src/hemesh_core" />
+      <root url="file://C:/Program Files/Java/hemesh/src/hemesh_creators" />
+      <root url="file://C:/Program Files/Java/hemesh/src/hemesh_modifiers" />
+      <root url="file://C:/Program Files/Java/hemesh/src/hemesh_subdividors" />
+      <root url="file://C:/Program Files/Java/hemesh/src/hemesh_tools" />
+      <root url="file://C:/Program Files/Java/hemesh/src/io" />
+      <root url="file://C:/Program Files/Java/hemesh/src/iso" />
+      <root url="file://C:/Program Files/Java/hemesh/src/map" />
+      <root url="file://C:/Program Files/Java/hemesh/src/math" />
+      <root url="file://C:/Program Files/Java/hemesh/src/nurbs" />
+      <root url="file://C:/Program Files/Java/hemesh/src/parameter" />
+      <root url="file://C:/Program Files/Java/hemesh/src/polygon" />
+      <root url="file://C:/Program Files/Java/hemesh/src/primitives" />
+      <root url="file://C:/Program Files/Java/hemesh/src/processing" />
+      <root url="file://C:/Program Files/Java/hemesh/src/random" />
+      <root url="file://C:/Program Files/Java/hemesh/src/spatial" />
+      <root url="file://C:/Program Files/Java/hemesh/src/triangulation" />
+      <root url="file://C:/Program Files/Java/hemesh/src/unstable" />
+      <root url="file://C:/Program Files/Java/hemesh/src/voronoi" />
+    </SOURCES>
+  </library>
+</component>
