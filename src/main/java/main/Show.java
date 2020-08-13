@@ -156,16 +156,16 @@ public class Show extends PApplet {
                 if(! st.contains(exist)) continue;
 
                 double size = controls.sizPoi;
-                if(controls.sizRnd) size = controls.sizPoi * (0.7 * rand.nextDouble() + 0.2);
+                if(controls.sizRnd) size = controls.sizPoi * (0.8 * rand.nextDouble() + 0.2);
 
 
                 int rndP_X = 0;
                 int rndP_Y = 0;
 
-                int lenX = (int)(cell_X * ( 1.0 - size));
+                int lenX = (int)(cell_X * ( 1.0 - size)) + 1;
                 if(controls.shiP_X) rndP_X = rand.nextInt(lenX) - lenX/2;
 
-                int lenY = (int)(cell_Y * ( 1.0 - size));
+                int lenY = (int)(cell_Y * ( 1.0 - size)) + 1;
                 if(controls.shiP_Y) rndP_Y = rand.nextInt(lenY) - lenY/2;
 
                 WB_Point center = new WB_Point((0.5f + i) * cell_X + rndL_X[i] + rndP_X, (0.5f + j) * cell_Y+rndL_Y[j] + rndP_Y);
@@ -191,7 +191,8 @@ public class Show extends PApplet {
 
                     WB_Quad q = new WB_Quad(p0, p1, p2, p3);
                     WB_Transform2D trans = new WB_Transform2D();
-                    trans.addRotateAboutPoint(controls.angPoi, center);
+                    double angle = controls.angPoi / 180 * Math.PI;
+                    trans.addRotateAboutPoint(angle, center);
                     q.apply2DSelf(trans);
 
                     quads.add(q);
@@ -208,7 +209,8 @@ public class Show extends PApplet {
                     WB_Triangle t = new WB_Triangle(p0, p1, p2);
 
                     WB_Transform2D trans = new WB_Transform2D();
-                    trans.addRotateAboutPoint(controls.angPoi, center);
+                    double angle = controls.angPoi / 180 * Math.PI;
+                    trans.addRotateAboutPoint(angle, center);
                     t.apply2DSelf(trans);
 
                     tris.add(t);
