@@ -10,6 +10,7 @@ public class Controls {
 
     // Element Parameters
     double sizPoi;
+    Boolean sizRnd;
     String shaPoi;
     double angPoi;
     String typeColor;
@@ -21,5 +22,6 @@ public class Controls {
     Boolean shiL_Y;
     Boolean shiP_X;
     Boolean shiP_Y;
-    int selPoi;
+    int seed;
+    double selPoi;
 }
