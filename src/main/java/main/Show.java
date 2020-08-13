@@ -140,6 +140,8 @@ public class Show extends PApplet {
 
                     WB_Circle c = new WB_Circle(center, radius);
                     circles.add(c);
+                    geom.addVerts(center);
+                    cnt = geom.addCircle(center, radius, cnt, 31);
 
 
 
@@ -154,16 +156,8 @@ public class Show extends PApplet {
 
                     WB_Quad q = new WB_Quad(p0, p1, p2, p3);
                     quads.add(q);
+                    cnt = geom.addRectangle(p0, p1, p2, p3, cnt);
 
-                    geom.addVerts(p0);
-                    geom.addVerts(p1);
-                    geom.addVerts(p2);
-                    geom.addVerts(p3);
-
-                    geom.addFaces(cnt, cnt+1, cnt+3);
-                    geom.addFaces(cnt+1, cnt+2, cnt+3);
-
-                    cnt += 4;
 
                 } else if (controls.shaPoi.equals("triangle")) {
                     double szX = cell_X * controls.sizPoi * 0.5;
@@ -175,13 +169,8 @@ public class Show extends PApplet {
 
                     WB_Triangle t = new WB_Triangle(p0, p1, p2);
                     tris.add(t);
+                    cnt = geom.addTriangle(p0, p1, p2, cnt);
 
-                    geom.addVerts(p0);
-                    geom.addVerts(p1);
-                    geom.addVerts(p2);
-
-                    geom.addFaces(cnt, cnt+1, cnt+2);
-                    cnt += 3;
                 }
             }
         }
