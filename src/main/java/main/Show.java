@@ -5,15 +5,11 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import processing.core.PApplet;
-import wblut.geom.WB_Circle;
-import wblut.geom.WB_Point;
-import wblut.geom.WB_Quad;
-import wblut.geom.WB_Triangle;
+import wblut.geom.*;
 import wblut.processing.WB_Render2D;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @classname: simpleProcessing
@@ -34,7 +30,7 @@ public class Show extends PApplet {
 
 
     public void settings() {
-        size(1000, 1000, P2D);
+        size(1000, 1000);
 
     }
 
@@ -82,6 +78,8 @@ public class Show extends PApplet {
 
     public void draw(){
         background(192);
+        translate(0,height-1);
+        scale(1, -1);
 
         if(controls != null) {
 
@@ -89,9 +87,9 @@ public class Show extends PApplet {
             fill(color[0], color[1], color[2]);
             noStroke();
 
-            if (quads != null) render.drawQuad2D(quads);
-            if (tris != null) render.drawTriangle2D(tris);
-            if (circles != null) {
+            if (quads.size() > 0) render.drawQuad2D(quads);
+            if (tris.size() > 0) render.drawTriangle2D(tris);
+            if (circles.size() > 0) {
                 for (WB_Circle c : circles) {
                     render.drawCircle2D(c);
                 }
@@ -130,24 +128,61 @@ public class Show extends PApplet {
         double cell_Y = (double) height / controls.LinNum_Y;
 
         int cnt = 0;
+
+        Random rand = new Random(controls.seed);
+
+        int[] rndL_X = new int[controls.LinNum_X];
+        for(int i = 0; i < controls.LinNum_X; ++ i) {
+            int length = (int)(cell_X * ( 1.0 - controls.sizPoi)) + 1;
+            if(controls.shiL_X) rndL_X[i] = rand.nextInt(length) - length / 2;
+        }
+
+        int[] rndL_Y = new int[controls.LinNum_Y];
+        for(int i = 0; i < controls.LinNum_Y; ++ i) {
+            int length = (int)(cell_Y * ( 1.0 - controls.sizPoi)) + 1;
+
+            if(controls.shiL_Y) rndL_Y[i] = rand.nextInt(length) - length / 2;
+        }
+
+        int total = (int) (controls.selPoi * controls.LinNum_X * controls.LinNum_Y);
+        Set<Integer> st = new HashSet<Integer>();
+        while(st.size() < total) {
+            st.add(rand.nextInt(controls.LinNum_X * controls.LinNum_Y));
+        }
+
         for (int i = 0; i < controls.LinNum_X; ++i) {
             for (int j = 0; j < controls.LinNum_Y; ++j) {
+                int exist = i * controls.LinNum_Y + j;
+                if(! st.contains(exist)) continue;
 
-                WB_Point center = new WB_Point((0.5f + i) * cell_X, (0.5f + j) * cell_Y);
+                double size = controls.sizPoi;
+                if(controls.sizRnd) size = controls.sizPoi * (0.7 * rand.nextDouble() + 0.2);
+
+
+                int rndP_X = 0;
+                int rndP_Y = 0;
+
+                int lenX = (int)(cell_X * ( 1.0 - size));
+                if(controls.shiP_X) rndP_X = rand.nextInt(lenX) - lenX/2;
+
+                int lenY = (int)(cell_Y * ( 1.0 - size));
+                if(controls.shiP_Y) rndP_Y = rand.nextInt(lenY) - lenY/2;
+
+                WB_Point center = new WB_Point((0.5f + i) * cell_X + rndL_X[i] + rndP_X, (0.5f + j) * cell_Y+rndL_Y[j] + rndP_Y);
+
 
                 if (controls.shaPoi.equals("circle")) {
-                    double radius = Math.min(cell_X, cell_Y) * controls.sizPoi;
+                    double radius = Math.min(cell_X, cell_Y) * size / 2.0;
 
                     WB_Circle c = new WB_Circle(center, radius);
+
                     circles.add(c);
                     geom.addVerts(center);
-                    cnt = geom.addCircle(center, radius, cnt, 31);
-
-
+                    cnt = geom.addCircle(center, radius, cnt, 15);
 
                 } else if (controls.shaPoi.equals("square")) {
-                    double szX = cell_X * controls.sizPoi * 0.5;
-                    double szY = cell_Y * controls.sizPoi * 0.5;
+                    double szX = cell_X * size * 0.5;
+                    double szY = cell_Y * size * 0.5;
 
                     WB_Point p0 = new WB_Point(center.xd() + szX, center.yd() + szY);
                     WB_Point p1 = new WB_Point(center.xd() - szX, center.yd() + szY);
@@ -155,21 +190,29 @@ public class Show extends PApplet {
                     WB_Point p3 = new WB_Point(center.xd() + szX, center.yd() - szY);
 
                     WB_Quad q = new WB_Quad(p0, p1, p2, p3);
-                    quads.add(q);
-                    cnt = geom.addRectangle(p0, p1, p2, p3, cnt);
+                    WB_Transform2D trans = new WB_Transform2D();
+                    trans.addRotateAboutPoint(controls.angPoi, center);
+                    q.apply2DSelf(trans);
 
+                    quads.add(q);
+                    cnt = geom.addRectangle(q.getP1(), q.getP2(), q.getP3(), q.getP4(), cnt);
 
                 } else if (controls.shaPoi.equals("triangle")) {
-                    double szX = cell_X * controls.sizPoi * 0.5;
-                    double szY = cell_Y * controls.sizPoi * 0.5;
+                    double szX = cell_X * size * 0.5;
+                    double szY = cell_Y * size * 0.5;
 
                     WB_Point p0 = new WB_Point(center.xd(), center.yd() + szY);
                     WB_Point p1 = new WB_Point(center.xd() - szX, center.yd() - szY);
                     WB_Point p2 = new WB_Point(center.xd() + szX, center.yd() - szY);
 
                     WB_Triangle t = new WB_Triangle(p0, p1, p2);
+
+                    WB_Transform2D trans = new WB_Transform2D();
+                    trans.addRotateAboutPoint(controls.angPoi, center);
+                    t.apply2DSelf(trans);
+
                     tris.add(t);
-                    cnt = geom.addTriangle(p0, p1, p2, cnt);
+                    cnt = geom.addTriangle(t.p1(), t.p2(), t.p3(), cnt);
 
                 }
             }
