@@ -1,5 +1,9 @@
 "use strict";
 var controls = new function () {
+    this.width = 1000;
+    this.height = 1000;
+    this.background = '#c0c0c0'
+
     this.sizPoi = 0.5;
     this.sizRnd = false;
     this.shaPoi = 'square';
@@ -25,8 +29,13 @@ var controls = new function () {
 }
 
 var gui = new dat.GUI();
+var settings = gui.addFolder('Settings');
+settings.add(controls, 'width').min(0).max(5000).step(10);
+settings.add(controls, 'height').min(0).max(5000).step(10);
+settings.addColor(controls, 'background');
+
 var element = gui.addFolder('Element Parameters');
-element.add(controls, 'sizPoi', 0, 1);
+element.add(controls, 'sizPoi', 0, 1.5);
 element.add(controls, 'sizRnd');
 element.add(controls, 'shaPoi', [ 'square', 'circle', 'triangle' ] );
 element.add(controls, 'angPoi', 0, 360).step(1);
@@ -34,8 +43,8 @@ element.addColor(controls, 'typeColor');
 element.open();
 
 var space = gui.addFolder('Space Parameters');
-space.add(controls, 'LinNum_X', 1, 15).step(1);
-space.add(controls, 'LinNum_Y', 1, 15).step(1);
+space.add(controls, 'LinNum_X', 1, 20).step(1);
+space.add(controls, 'LinNum_Y', 1, 20).step(1);
 space.add(controls, 'shiL_X');
 space.add(controls, 'shiL_Y');
 space.add(controls, 'shiP_X');

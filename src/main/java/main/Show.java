@@ -27,6 +27,7 @@ public class Show extends PApplet {
     private List<WB_Triangle> tris;
     private List<WB_Circle> circles;
 
+    private boolean drawFlag = false;
 
 
     public void settings() {
@@ -60,8 +61,8 @@ public class Show extends PApplet {
                     System.out.println(args[0]);
                     Gson gson = new Gson();
                     controls = gson.fromJson(args[0].toString(), Controls.class);
-
                     Geometry geom = parseGeometry(controls);
+                    drawFlag = true;
                     String sg = gson.toJson(geom);
                     System.out.println(sg);
 
@@ -76,113 +77,105 @@ public class Show extends PApplet {
     }
 
 
-    public void draw(){
-        background(192);
-        translate(0,height-1);
-        scale(1, -1);
+    public void draw() {
+        if (drawFlag) {
 
-        if(controls != null) {
+            int[] bc = hex2Rgb(controls.background);
+            background(bc[0], bc[1], bc[2]);
+            translate(0, height - 1);
+            scale(1, -1);
+
 
             int[] color = hex2Rgb(controls.typeColor);
             fill(color[0], color[1], color[2]);
             noStroke();
 
-            if (quads.size() > 0) render.drawQuad2D(quads);
-            if (tris.size() > 0) render.drawTriangle2D(tris);
-            if (circles.size() > 0) {
-                for (WB_Circle c : circles) {
-                    render.drawCircle2D(c);
-                }
+            render.drawQuad2D(quads);
+            render.drawTriangle2D(tris);
+            for (WB_Circle c : circles) {
+                render.drawCircle2D(c);
             }
-        }
-    }
-
-    public void keyPressed() {
-        if(key == 's' || key == 'S') {
-            if(socket != null) {
-                socket.emit("create", "hello from java");
-            }
-        }
-
-        if(key == 'i' || key == 'I') {
-
         }
     }
 
     public int[] hex2Rgb(String colorStr) {
-        return new int[] {
-                Integer.valueOf( colorStr.substring( 1, 3 ), 16 ),
-                Integer.valueOf( colorStr.substring( 3, 5 ), 16 ),
-                Integer.valueOf( colorStr.substring( 5, 7 ), 16 ) };
+        return new int[]{
+                Integer.valueOf(colorStr.substring(1, 3), 16),
+                Integer.valueOf(colorStr.substring(3, 5), 16),
+                Integer.valueOf(colorStr.substring(5, 7), 16)};
     }
 
     public Geometry parseGeometry(Controls controls) {
         Geometry geom = new Geometry();
+        Random rand = new Random(controls.seed);
 
+        // 初始化
         quads = new ArrayList<WB_Quad>();
         tris = new ArrayList<WB_Triangle>();
         circles = new ArrayList<WB_Circle>();
 
+        // 确定 cell 尺寸
+        double cell_X = (double) controls.width / controls.LinNum_X;
+        double cell_Y = (double) controls.height / controls.LinNum_Y;
 
-        double cell_X = (double) width / controls.LinNum_X;
-        double cell_Y = (double) height / controls.LinNum_Y;
+        // 确定轴网偏移
+        double[] rndL_X = new double[controls.LinNum_X];
+        double[] rndL_Y = new double[controls.LinNum_Y];
 
-        int cnt = 0;
+        double len_X = controls.sizPoi < 1.0 ? cell_X * (1.0 - controls.sizPoi) : 0;
+        double len_Y = controls.sizPoi < 1.0 ? cell_Y * (1.0 - controls.sizPoi) : 0;
 
-        Random rand = new Random(controls.seed);
-
-        int[] rndL_X = new int[controls.LinNum_X];
-        for(int i = 0; i < controls.LinNum_X; ++ i) {
-            int length = (int)(cell_X * ( 1.0 - controls.sizPoi)) + 1;
-            if(controls.shiL_X) rndL_X[i] = rand.nextInt(length) - length / 2;
+        for (int i = 0; i < controls.LinNum_X; ++i) {
+            rndL_X[i] = controls.shiL_X ? rand.nextDouble() * len_X - len_X / 2 : 0;
         }
 
-        int[] rndL_Y = new int[controls.LinNum_Y];
-        for(int i = 0; i < controls.LinNum_Y; ++ i) {
-            int length = (int)(cell_Y * ( 1.0 - controls.sizPoi)) + 1;
-
-            if(controls.shiL_Y) rndL_Y[i] = rand.nextInt(length) - length / 2;
+        for (int i = 0; i < controls.LinNum_Y; ++i) {
+            rndL_Y[i] = controls.shiL_Y ? rand.nextDouble() * len_Y - len_Y / 2 : 0;
         }
 
+        // 筛选点数量
+        rand = new Random(controls.seed);
         int total = (int) (controls.selPoi * controls.LinNum_X * controls.LinNum_Y);
         Set<Integer> st = new HashSet<Integer>();
-        while(st.size() < total) {
+        while (st.size() < total) {
             st.add(rand.nextInt(controls.LinNum_X * controls.LinNum_Y));
         }
 
+        // 确定点尺寸
+        rand = new Random(controls.seed);
+        double[] pointSize = new double[controls.LinNum_X * controls.LinNum_Y];
+        for(int i = 0; i < controls.LinNum_X * controls.LinNum_Y; ++ i) {
+            pointSize[i] = controls.sizPoi;
+            if(controls.sizRnd) pointSize[i] = controls.sizPoi * (0.8 * rand.nextDouble() + 0.2);
+        }
+
+        int cnt = 0;
+        rand = new Random(controls.seed);
         for (int i = 0; i < controls.LinNum_X; ++i) {
             for (int j = 0; j < controls.LinNum_Y; ++j) {
-                int exist = i * controls.LinNum_Y + j;
-                if(! st.contains(exist)) continue;
 
-                double size = controls.sizPoi;
-                if(controls.sizRnd) size = controls.sizPoi * (0.8 * rand.nextDouble() + 0.2);
+                int index = i * controls.LinNum_Y + j;
+                if (!st.contains(index)) continue;
 
+                // 确定点位置
 
-                int rndP_X = 0;
-                int rndP_Y = 0;
+                double rndP_X = controls.shiP_X ? rand.nextDouble() * len_X - len_X / 2 : 0;
+                double rndP_Y = controls.shiP_Y ? rand.nextDouble() * len_Y - len_Y / 2 : 0;
 
-                int lenX = (int)(cell_X * ( 1.0 - size)) + 1;
-                if(controls.shiP_X) rndP_X = rand.nextInt(lenX) - lenX/2;
-
-                int lenY = (int)(cell_Y * ( 1.0 - size)) + 1;
-                if(controls.shiP_Y) rndP_Y = rand.nextInt(lenY) - lenY/2;
-
-                WB_Point center = new WB_Point((0.5f + i) * cell_X + rndL_X[i] + rndP_X, (0.5f + j) * cell_Y+rndL_Y[j] + rndP_Y);
+                WB_Point center = new WB_Point((0.5f + i) * cell_X + rndL_X[i] + rndP_X, (0.5f + j) * cell_Y + rndL_Y[j] + rndP_Y);
 
 
                 if (controls.shaPoi.equals("circle")) {
-                    double radius = Math.min(cell_X, cell_Y) * size / 2.0;
-
+                    double radius = Math.min(cell_X, cell_Y) * pointSize[index] / 2.0;
                     WB_Circle c = new WB_Circle(center, radius);
 
                     circles.add(c);
                     geom.addVerts(center);
-                    cnt = geom.addCircle(center, radius, cnt, 15);
+                    geom.addCircle(center, radius);
 
                 } else if (controls.shaPoi.equals("square")) {
-                    double szX = cell_X * size * 0.5;
-                    double szY = cell_Y * size * 0.5;
+                    double szX = cell_X * pointSize[index] * 0.5;
+                    double szY = cell_Y * pointSize[index] * 0.5;
 
                     WB_Point p0 = new WB_Point(center.xd() + szX, center.yd() + szY);
                     WB_Point p1 = new WB_Point(center.xd() - szX, center.yd() + szY);
@@ -190,6 +183,7 @@ public class Show extends PApplet {
                     WB_Point p3 = new WB_Point(center.xd() + szX, center.yd() - szY);
 
                     WB_Quad q = new WB_Quad(p0, p1, p2, p3);
+
                     WB_Transform2D trans = new WB_Transform2D();
                     double angle = controls.angPoi / 180 * Math.PI;
                     trans.addRotateAboutPoint(angle, center);
@@ -199,8 +193,8 @@ public class Show extends PApplet {
                     cnt = geom.addRectangle(q.getP1(), q.getP2(), q.getP3(), q.getP4(), cnt);
 
                 } else if (controls.shaPoi.equals("triangle")) {
-                    double szX = cell_X * size * 0.5;
-                    double szY = cell_Y * size * 0.5;
+                    double szX = cell_X * pointSize[index] * 0.5;
+                    double szY = cell_Y * pointSize[index] * 0.5;
 
                     WB_Point p0 = new WB_Point(center.xd(), center.yd() + szY);
                     WB_Point p1 = new WB_Point(center.xd() - szX, center.yd() - szY);
