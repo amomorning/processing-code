@@ -53,12 +53,14 @@ io.on('connection', socket => {
 
     socket.on('initCanvas', async function (message) {
         console.log(`Client [id=${socket.id}] initCanvas`);
+        socket_id = socket.id;
         io.emit('queryCanvasSize', 'ww');
+        return socket_io;
     });
 
     socket.on('changeCanvas', async function (message) {
         console.log('change: ' + message);
-        io.emit('changeCanvasSize', message);
+        io.to(socket_id).emit('changeCanvasSize', message);
     });
 
     socket.on('parametersExchange', async function (message) {

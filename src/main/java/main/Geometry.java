@@ -15,10 +15,12 @@ import java.util.List;
 public class Geometry {
     public List<double[]> verts;
     public List<int[]> faces;
+    public List<double[]> circles;
 
     public Geometry() {
         verts = new ArrayList<double[]>();
         faces = new ArrayList<int[]>();
+        circles = new ArrayList<double[]>();
     }
 
     public void addVerts(WB_Coord pt) {
@@ -28,6 +30,10 @@ public class Geometry {
     public void addFaces(int f0, int f1, int f2) {
         faces.add(new int[]{f0, f1, f2});
 
+    }
+
+    public void addCircle(WB_Coord center, double radius) {
+        circles.add(new double[]{center.xd(), center.yd(), center.zd(), radius});
     }
 
     public int addCircle(WB_Coord center, double radius, int cnt, int segs) {

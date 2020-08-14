@@ -19,7 +19,7 @@ function IOUtils() {
 
 	socket.on('changeCanvasSize', async function(message) {
 		var canvasSize = JSON.parse(message);
-		setCanvasSize(canvasSize.width, canvasSize.height);
+		setCanvasSize(canvasSize.width, canvasSize.height, '#c0c0c0');
 	});
 
 	socket.on('receiveGeometry', async function(message){
@@ -27,12 +27,11 @@ function IOUtils() {
 		while(scene.children.length > 0){ 
 			scene.remove(scene.children[0]); 
 		}
+
 		console.log('scene cleared')
+		setCanvasSize(controls.width, controls.height, controls.background);
 		// get geometry
-		var geo = parseGeometry(JSON.parse(message));
-		var material = new THREE.MeshBasicMaterial( { color: controls.typeColor, side: THREE.DoubleSide } );
-		var mesh = new THREE.Mesh( geo, material );
-		scene.add( mesh );
+		parseGeometry(JSON.parse(message));
 		
 		renderer.render( scene, camera );
 
@@ -40,20 +39,19 @@ function IOUtils() {
 
 }
 
-function setCanvasSize(width, height) {
-	var canvasRatio = width / height;
-	windowScale = 1000;
-	var windowWidth = windowScale * canvasRatio;
-	var windowHeight = windowScale;
+function setCanvasSize(width, height, background) {
 
-	camera = new THREE.OrthographicCamera( windowWidth / - 2, windowWidth / 2, windowHeight / 2, windowHeight / - 2, 0, 40 )
-	var focus = new THREE.Vector3( windowWidth / 2, windowHeight / 2, 0 );
+	camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 0, 40 )
+	var focus = new THREE.Vector3( width / 2, height / 2, 0 );
 	camera.position.x = focus.x;
 	camera.position.y = focus.y;
 	camera.position.z = 10;
 	camera.lookAt(focus);
 
 	renderer.setSize(width, height);
+	console.log(background);
+	
+	renderer.setClearColor(new THREE.Color(background));
 	renderer.render( scene, camera );
 }
 
@@ -98,37 +96,35 @@ function parseGeometry(geomJson) {
 		var fs = geomJson.faces[i];
 		geo.faces.push(new THREE.Face3(fs[0], fs[1], fs[2]));
 	}
-
-	return geo;
-}
-
-
-function PolygonGeometry(sides, location, radius) {
-	var geo = new THREE.Geometry();
-
-	// generate vertices
-	for ( var pt = 0 ; pt < sides; pt++ )
-	{
-		// Add 90 degrees so we start at +Y axis, rotate counterclockwise around
-		var angle = (Math.PI/2) + (pt / sides) * 2 * Math.PI;
-
-		var x = radius * Math.cos(angle) + location.x;
-		var y = radius * Math.sin(angle) + location.y;
-		console.log(x, y);
-
-		// Save the vertex location
-		geo.vertices.push( new THREE.Vector3( x, y, 0.0 ) );
+	var material = new THREE.MeshBasicMaterial( { color: controls.typeColor, side: THREE.DoubleSide } );
+	if(geo.vertices.length > 0) {
+		var mesh = new THREE.Mesh( geo, material );
+		scene.add( mesh )
 	}
 
-	// generate faces
-	for ( var face = 0 ; face < sides-2; face++ )
-	{
-		// this makes a triangle fan, from the first +Y point around
-		geo.faces.push( new THREE.Face3( 0, face+1, face+2 ) );
+	for(var i = 0; i < geomJson.circles.length; ++ i) {
+		var c = geomJson.circles[i];
+		var circle = new THREE.CircleGeometry(c[3], 32);
+		circle.translate(c[0], c[1], c[2]);
+		var meshc = new THREE.Mesh(circle, material);
+		scene.add( meshc );
 	}
-	// done: return it.
-	return geo;
+
 }
+
+function loadLogo() {
+	var textureLoader = new THREE.TextureLoader();
+	var texture = textureLoader.load('textures/AAA.jpg');
+
+	var geo = new THREE.PlaneGeometry(1000, 1000);
+	geo.translate(500, 500, 0);
+
+	var material = new THREE.MeshBasicMaterial({map:texture});
+
+	var mesh = new THREE.Mesh(geo, material);
+	scene.add( mesh );
+}
+
 
 function init() {
 
@@ -137,14 +133,11 @@ function init() {
 	// scene
 	scene = new THREE.Scene();
 	scene.autoUpdate = true;
-	renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true});
+	renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true});
 
 	
-	setCanvasSize(window.innerWidth, window.innerHeight);
+	setCanvasSize(window.innerWidth, window.innerHeight, '#c0c0c0');
 
-	renderer.gammaInput = true;
-	renderer.gammaOutput = true;
-	renderer.setClearColor(new THREE.Color(0xC0C0C0));
 
 	socket.emit('initCanvas', 'ww');
 }
@@ -162,11 +155,7 @@ function addToDOM() {
 // Main body of the script
 try {
 	init();
-	var geo = parseGeometry(JSON.parse('{"verts":[[30, 30, 0],[70, 30, 0],[70, 70, 0],[30, 70, 0]],"faces":[[0,1,3],[1,2,3]]}'));
-	console.log(geo.vertices);
-	var material = new THREE.MeshBasicMaterial( { color: 0xff0000, side: THREE.FrontSide } );
-	var mesh = new THREE.Mesh( geo, material );
-	scene.add( mesh );
+	loadLogo();
 	addToDOM();
 } catch(e) {
 	var errorReport = "Your program encountered an unrecoverable error, can not draw on canvas. Error was:<br/><br/>";

@@ -8,6 +8,10 @@ package main;
  */
 public class Controls {
 
+    double width;
+    double height;
+    String background;
+
     // Element Parameters
     double sizPoi;
     Boolean sizRnd;
