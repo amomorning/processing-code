@@ -4,8 +4,8 @@ var controls = new function () {
     this.height = 1000;
     this.background = '#c0c0c0'
 
-    this.sizPoi = 0.5;
-    this.sizRnd = false;
+    this.sizPoi_max = 0.5;
+    this.sizPoi_min = 0.5;
     this.shaPoi = 'square';
     this.angPoi = 0.0;
     this.typeColor = '#000000';
@@ -22,6 +22,11 @@ var controls = new function () {
 
     this.update = function() {
         socket.emit('parametersExchange', JSON.stringify(this));
+        element.__controllers[1].__max = this.sizPoi_max;
+        element.__controllers[1].updateDisplay();
+        console.log(element.__controllers[1]);
+
+
     };
     this.save = function() {
         saveAsImage();
@@ -33,11 +38,12 @@ var settings = gui.addFolder('Settings');
 settings.add(controls, 'width').min(0).max(5000).step(10);
 settings.add(controls, 'height').min(0).max(5000).step(10);
 settings.addColor(controls, 'background');
+settings.open()
 
 var element = gui.addFolder('Element Parameters');
-element.add(controls, 'sizPoi', 0, 1.5);
-element.add(controls, 'sizRnd');
-element.add(controls, 'shaPoi', [ 'square', 'circle', 'triangle' ] );
+element.add(controls, 'sizPoi_max', 0, 1.5);
+element.add(controls, 'sizPoi_min', 0, controls.sizPoi_max);
+element.add(controls, 'shaPoi', ['square', 'circle', 'triangle']);
 element.add(controls, 'angPoi', 0, 360).step(1);
 element.addColor(controls, 'typeColor');
 element.open();

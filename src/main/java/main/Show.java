@@ -122,8 +122,8 @@ public class Show extends PApplet {
         double[] rndL_X = new double[controls.LinNum_X];
         double[] rndL_Y = new double[controls.LinNum_Y];
 
-        double len_X = controls.sizPoi < 1.0 ? cell_X * (1.0 - controls.sizPoi) : 0;
-        double len_Y = controls.sizPoi < 1.0 ? cell_Y * (1.0 - controls.sizPoi) : 0;
+        double len_X = controls.sizPoi_max < 1.0 ? cell_X * (1.0 - controls.sizPoi_max) : 0;
+        double len_Y = controls.sizPoi_max < 1.0 ? cell_Y * (1.0 - controls.sizPoi_max) : 0;
 
         for (int i = 0; i < controls.LinNum_X; ++i) {
             rndL_X[i] = controls.shiL_X ? rand.nextDouble() * len_X - len_X / 2 : 0;
@@ -145,8 +145,7 @@ public class Show extends PApplet {
         rand = new Random(controls.seed);
         double[] pointSize = new double[controls.LinNum_X * controls.LinNum_Y];
         for(int i = 0; i < controls.LinNum_X * controls.LinNum_Y; ++ i) {
-            pointSize[i] = controls.sizPoi;
-            if(controls.sizRnd) pointSize[i] = controls.sizPoi * (0.8 * rand.nextDouble() + 0.2);
+            pointSize[i] = rand.nextDouble() * (controls.sizPoi_max - controls.sizPoi_min) + controls.sizPoi_min;
         }
 
         int cnt = 0;

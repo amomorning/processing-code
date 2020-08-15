@@ -87,17 +87,21 @@ var saveFile = function (strData, filename) {
 
 function parseGeometry(geomJson) {
 	var geo = new THREE.Geometry();
+	var flag = true;
 	for(var i = 0; i < geomJson.verts.length; ++ i) {
 		var vt = geomJson.verts[i];
 		geo.vertices.push(new THREE.Vector3(vt[0], vt[1], vt[2]));
+		flag &= true;
 	}
 	
 	for(var i = 0; i < geomJson.faces.length; ++ i) {
 		var fs = geomJson.faces[i];
 		geo.faces.push(new THREE.Face3(fs[0], fs[1], fs[2]));
+		flag &= true;
 	}
 	var material = new THREE.MeshBasicMaterial( { color: controls.typeColor, side: THREE.DoubleSide } );
-	if(geo.vertices.length > 0) {
+
+	if(flag) {
 		var mesh = new THREE.Mesh( geo, material );
 		scene.add( mesh )
 	}
