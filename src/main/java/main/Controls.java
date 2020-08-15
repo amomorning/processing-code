@@ -13,8 +13,8 @@ public class Controls {
     String background;
 
     // Element Parameters
-    double sizPoi;
-    Boolean sizRnd;
+    double sizPoi_max;
+    double sizPoi_min;
     String shaPoi;
     double angPoi;
     String typeColor;
