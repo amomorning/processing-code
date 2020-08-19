@@ -3,7 +3,7 @@
 var camera, scene, renderer;
 var canvasWidth, canvasHeight;
 var windowScale;
-var socket = io('ws://10.193.134.62:23810');
+var socket = io('ws://127.0.0.1:23810');
 
 
 function IOUtils() {
