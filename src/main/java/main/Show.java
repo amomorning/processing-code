@@ -20,14 +20,13 @@ import java.util.*;
 public class Show extends PApplet {
 
     private Socket socket;
-    private Controls controls;
     private WB_Render2D render;
 
-    private List<WB_Quad> quads;
-    private List<WB_Triangle> tris;
-    private List<WB_Circle> circles;
-
-    private boolean drawFlag = false;
+    static public Controls controls;
+    static private List<WB_Quad> quads;
+    static private List<WB_Triangle> tris;
+    static private List<WB_Circle> circles;
+    static private boolean drawFlag = false;
 
 
     public void settings() {
@@ -62,7 +61,6 @@ public class Show extends PApplet {
                     Gson gson = new Gson();
                     controls = gson.fromJson(args[0].toString(), Controls.class);
                     Geometry geom = parseGeometry(controls);
-                    drawFlag = true;
                     String sg = gson.toJson(geom);
                     System.out.println(sg);
 
@@ -105,7 +103,7 @@ public class Show extends PApplet {
                 Integer.valueOf(colorStr.substring(5, 7), 16)};
     }
 
-    public Geometry parseGeometry(Controls controls) {
+    static public Geometry parseGeometry(Controls controls) {
         Geometry geom = new Geometry();
         Random rand = new Random(controls.seed);
 
@@ -212,6 +210,10 @@ public class Show extends PApplet {
                 }
             }
         }
+        System.out.println("Number of circles = " + circles.size());
+        System.out.println("Number of squares = " + quads.size());
+        System.out.println("Number of triangles = " + tris.size());
+        drawFlag = true;
         return geom;
     }
 }

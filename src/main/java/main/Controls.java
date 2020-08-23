@@ -8,15 +8,15 @@ package main;
  */
 public class Controls {
 
-    double width;
-    double height;
+    float width;
+    float height;
     String background;
 
     // Element Parameters
-    double sizPoi_max;
-    double sizPoi_min;
+    float sizPoi_max;
+    float sizPoi_min;
     String shaPoi;
-    double angPoi;
+    float angPoi;
     String typeColor;
 
     //Space Parameters
@@ -27,5 +27,5 @@ public class Controls {
     Boolean shiP_X;
     Boolean shiP_Y;
     int seed;
-    double selPoi;
+    float selPoi;
 }
