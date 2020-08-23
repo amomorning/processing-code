@@ -17,6 +17,7 @@ node app.js
 ``` bash
 node app.js
 ```
+运行Java程序后，需要从网页上点Update看到更新。
 
 ![](fig/modulate.png)
 
