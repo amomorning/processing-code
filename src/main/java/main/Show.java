@@ -2,7 +2,6 @@ package main;
 
 import Guo_Cam.CameraController;
 import Guo_Cam.Vec_Guo;
-import controlP5.ControlEvent;
 import controlP5.ControlP5;
 import processing.core.PApplet;
 import wblut.hemesh.HEC_Cylinder;
