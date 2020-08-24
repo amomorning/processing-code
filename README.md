@@ -13,6 +13,9 @@ As a template, it's also an example from [processing.org](https://processing.org
 HE_Mesh template with camera controller
 ![](https://github.com/amomorning/processing-code/blob/hemesh/fig/XhpK4nms4w.gif)
 
+### [dxf-reader](https://github.com/amomorning/processing-code/tree/dxf-reader)
+read from layers in dxf file
+![](https://github.com/amomorning/processing-code/blob/dxf-reader/fig/seu-eth.png)
 
 ### [Color](https://github.com/amomorning/processing-code/tree/color)
 color blender
