@@ -63,9 +63,9 @@ io.on('connection', socket => {
         io.to(socket_id).emit('changeCanvasSize', message);
     });
 
-    socket.on('parametersExchange', async function (message) {
-        console.log('parametersExchange: ' + message);
-        io.emit('receiveParameters', message);
+    socket.on('parametersExchange', async function (data) {
+        console.log('parametersExchange: ' + data);
+        io.emit(data.theme + 'ReceiveParameters', data.controls);
         socket_id = socket.id;
 
         console.log(socket_id);

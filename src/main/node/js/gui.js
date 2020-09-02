@@ -21,7 +21,7 @@ var controls = new function () {
     
 
     this.update = function() {
-        socket.emit('parametersExchange', JSON.stringify(this));
+        socket.emit('parametersExchange', {theme: "modulate", controls: JSON.stringify(this)});
         element.__controllers[1].__max = this.sizPoi_max;
         element.__controllers[1].updateDisplay();
         console.log(element.__controllers[1]);

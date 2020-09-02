@@ -52,7 +52,7 @@ public class Show extends PApplet {
                 }
             });
 
-            socket.on("receiveParameters", new Emitter.Listener() {
+            socket.on("modulateReceiveParameters", new Emitter.Listener() {
 
                 @Override
                 public void call(Object... args) {
