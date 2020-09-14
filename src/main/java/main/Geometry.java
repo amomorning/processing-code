@@ -24,7 +24,7 @@ public class Geometry {
     }
 
     public void addVerts(WB_Coord pt) {
-        verts.add(new double[] {pt.xd(), pt.yd(), pt.zd()});
+        verts.add(new double[]{pt.xd(), pt.yd(), pt.zd()});
     }
 
     public void addFaces(int f0, int f1, int f2) {

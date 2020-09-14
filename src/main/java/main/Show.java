@@ -35,7 +35,6 @@ public class Show extends PApplet {
     }
 
     public void setup() {
-
         background(192);
         render = new WB_Render2D(this);
         try {
@@ -77,6 +76,7 @@ public class Show extends PApplet {
 
     public void draw() {
         if (drawFlag) {
+
 
             int[] bc = hex2Rgb(controls.background);
             background(bc[0], bc[1], bc[2]);
