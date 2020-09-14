@@ -1,7 +1,7 @@
 "use strict";
 import * as THREE from 'three'
 import socket from '@/socket'
-import * as gui from '@/assets/js/gui'
+// import * as gui from '@/assets/js/gui'
 var OrbitControls = require('three-orbit-controls')(THREE)
 
 var offsetHeight = 190;
@@ -15,12 +15,7 @@ function IOUtils() {
         }
 
         console.log('scene cleared')
-        let w = gui.controls.width, h = gui.controls.height;
-        if (gui.controls.sidSta % 2 == 1) {
-            let temp = w;
-            w = h;
-            h = temp;
-        }
+
         // get geometry
         parseGeometry(JSON.parse(message));
 
@@ -31,7 +26,6 @@ function IOUtils() {
 }
 
 function parseGeometry(geomJson) {
-
     let flag = true;
     const geometry = new THREE.Geometry();
     const vertices = geomJson.verts;
@@ -83,8 +77,6 @@ function parseGeometry(geomJson) {
         scene.add(meshc);
     }
 }
-
-
 
 function initRender() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -182,5 +174,6 @@ function main() {
 }
 
 export {
+    socket,
     main
 }
