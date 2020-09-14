@@ -1,29 +1,38 @@
-# processing-code
+# 3d-web
 
-Simple processing examples separated by different branches.
+web framework connecting processing and threejs
 
-### master
-Master branch is always the working-on branch
+### 运行(开发)
+#### 前端服务器调试
+``` bash
+cd src/main/3d-web
+npm run serve
+```
+#### node 服务器
+``` bash
+cd src/main/3d-web/bak
+# 第一次下载代码到本地
+npm install 
+# 运行node服务器
+node app.js
+```
+#### Java 程序
+直接运行程序 `Shift + F10`
 
-### [primary-view](https://github.com/amomorning/processing-code/tree/primary-view)
-Overview and template, an example from [processing.org](https://processing.org/examples/mousefunctions.html)
-![](https://github.com/amomorning/processing-code/tree/primary-view/fig/HWXu8aTBde.gif)
+### dat.gui 参数控制与 socket.io 数据传输
+在网页前端控制参数，使用socket.io作为数据双向传输的工具，点Update看到更新。
+![](fig/prtsc.png)
 
-### [Reaction-Diffusion](https://github.com/amomorning/processing-code/tree/diffusion)
-![](https://github.com/amomorning/processing-code/blob/diffusion/fig/SKo2w2KJSda.png)
-
-### [hemesh](https://github.com/amomorning/processing-code/tree/hemesh)
-HE_Mesh template with camera controller
-![](https://github.com/amomorning/processing-code/blob/hemesh/fig/XhpK4nms4w.gif)
-
-### [dxf-reader](https://github.com/amomorning/processing-code/tree/dxf-reader)
-read from layers in dxf file
-![](https://github.com/amomorning/processing-code/blob/dxf-reader/fig/seu-eth.png)
-
-### [Color](https://github.com/amomorning/processing-code/tree/color)
-color blender
-![](https://github.com/amomorning/processing-code/blob/color/fig/color.png)
-
-### [web-2D](https://github.com/amomorning/processing-code/tree/2D-web)
-A web framework connecting processing and threejs
-![](https://github.com/amomorning/processing-code/blob/2D-web/fig/modulate.png)
+### 运行(生产)
+将程序以生产环境发布
+#### 前端服务器
+``` bash
+cd src/main/3d-web
+npm run build
+```
+将`bak`文件夹内容复制到`dist`中，运行
+``` bash
+npm install
+node app.js
+```
+这时只需要后端java运行就可以使用网页功能了。
