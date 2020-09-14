@@ -1,9 +1,11 @@
 <component name="libraryTable">
-  <library name="controlP5">
+  <library name="MidiMapper">
     <CLASSES>
       <root url="jar://C:/Program Files/Java/controlP5/library/controlP5.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="file://C:/Program Files/Java/controlP5/reference" />
+    </JAVADOC>
     <SOURCES>
       <root url="file://C:/Program Files/Java/controlP5/src" />
     </SOURCES>
