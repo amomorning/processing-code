@@ -19,6 +19,8 @@ public class Show extends PApplet {
     public WB_Render3D render;
     public CameraController cam;
     boolean flag = false;
+
+    public Server server;
     public void settings() {
         size(1000, 1000, P3D);
         smooth(8);
@@ -27,11 +29,12 @@ public class Show extends PApplet {
     public void setup() {
         createMesh();
         cam = new CameraController(this, 1000);
+        server = new Server();
 
         HES_CatmullClark subdivide = new HES_CatmullClark();
-        subdivide.setKeepBoundary(true);// preserve position of vertices on a surface boundary
-        subdivide.setKeepEdges(true);// preserve position of vertices on edge of selection (only useful if using subdivideSelected)
-        subdivide.setBlendFactor(1.0); //controls how much the vertices are moved: 0.0=planar, 1.0=true Catmull-Clark
+        subdivide.setKeepBoundary(true);
+        subdivide.setKeepEdges(true);
+        subdivide.setBlendFactor(1.0);
         mesh.subdivide(subdivide, 3);
 
         render = new WB_Render(this);
@@ -60,6 +63,8 @@ public class Show extends PApplet {
         mesh = new HE_Mesh(creator);
     }
 
-
+    public static void main(String[] args) {
+        PApplet.main("main.Show");
+    }
 
 }
