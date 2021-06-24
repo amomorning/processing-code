@@ -2,8 +2,12 @@ package main;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
@@ -42,7 +46,21 @@ public class Server {
         socket.on(Socket.EVENT_CONNECT, args -> {
             JsonObject o = new JsonObject();
             o.addProperty("key", "cb792abe-c615-45f9-9b64-e9d95ce2dd94");
-            socket.emit("register", gson.toJson(o));
+            o.addProperty("identity", "engine");
+            socket.emit("register", gson.toJson(o), (Ack) objects -> {
+                JSONObject response = (JSONObject) objects[0];
+                try {
+                    System.out.println(response.getString("status"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
+
+        socket.on("quickreturn", args -> {
+            // ...
+            System.out.println(args[0]);
+            System.out.println(args[1]);
         });
     }
 
