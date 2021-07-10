@@ -45,22 +45,41 @@ public class Server {
 
         socket.on(Socket.EVENT_CONNECT, args -> {
             JsonObject o = new JsonObject();
-            o.addProperty("key", "cb792abe-c615-45f9-9b64-e9d95ce2dd94");
+            o.addProperty("key", "9d8b6db7-1a95-4747-ae96-b5641047794c");
             o.addProperty("identity", "engine");
             socket.emit("register", gson.toJson(o), (Ack) objects -> {
                 JSONObject response = (JSONObject) objects[0];
                 try {
                     System.out.println(response.getString("status"));
+
+                    // message must send after registered.
+                    sendMessage(gson);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             });
         });
 
-        socket.on("quickreturn", args -> {
+        socket.on("receive", args -> {
             // ...
             System.out.println(args[0]);
-            System.out.println(args[1]);
+        });
+
+
+    }
+
+    public void sendMessage(Gson gson) {
+        JsonObject o = new JsonObject();
+        o.addProperty("to", "client");
+        o.addProperty("body", "hello");
+
+        socket.emit("exchange", gson.toJson(o), (Ack) objects -> {
+            JSONObject response = (JSONObject) objects[0];
+            try {
+                System.out.println(response.getString("status"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         });
     }
 
