@@ -9,7 +9,11 @@ import io.socket.emitter.Emitter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @classname: simpleProcessing
@@ -53,7 +57,7 @@ public class Server {
                     System.out.println(response.getString("status"));
 
                     // message must send after registered.
-                    sendMessage(gson);
+                    sendMessage(gson, "*");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -63,14 +67,19 @@ public class Server {
         socket.on("receive", args -> {
             // ...
             System.out.println(args[0]);
+            JsonObject ctx = gson.fromJson(String.valueOf(args[0]), JsonObject.class);
+            System.out.println(ctx.get("id").getAsString());
+            System.out.println(ctx.get("body").getAsString());
         });
 
 
     }
 
-    public void sendMessage(Gson gson) {
+
+    public void sendMessage(Gson gson, String id) {
         JsonObject o = new JsonObject();
         o.addProperty("to", "client");
+        o.addProperty("id", id);
         o.addProperty("body", "hello");
 
         socket.emit("exchange", gson.toJson(o), (Ack) objects -> {
@@ -83,7 +92,7 @@ public class Server {
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SocketException {
         Server server = new Server();
 
     }
