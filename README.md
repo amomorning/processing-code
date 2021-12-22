@@ -31,4 +31,4 @@ A web framework connecting processing and threejs
 ### [Line Voronoi](https://github.com/amomorning/processing-code/tree/voronoi)
 Voronoi cell from line segments
 
-![](https://github.com/amomorning/processing-code/tree/voronoi/fig/line-voronoi.png)
+![](https://github.com/amomorning/processing-code/blob/voronoi/fig/line-voronoi.png)
