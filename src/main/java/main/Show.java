@@ -64,13 +64,13 @@ public class Show extends PApplet {
 
     public void settings() {
         size(N,N, P2D);
+        smooth(8);
 
     }
 
     public void setup() {
 
         frameRate(25);
-        smooth();
         colorMode(HSB,1.0f);
         //Set default parameters;
         diffU = 0.16;
