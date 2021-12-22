@@ -27,3 +27,8 @@ color blender
 ### [web-2D](https://github.com/amomorning/processing-code/tree/2D-web)
 A web framework connecting processing and threejs
 ![](https://github.com/amomorning/processing-code/blob/2D-web/fig/modulate.png)
+
+### [Line Voronoi](https://github.com/amomorning/processing-code/tree/voronoi)
+Voronoi cell from line segments
+
+![](https://github.com/amomorning/processing-code/tree/voronoi/fig/line-voronoi.png)
