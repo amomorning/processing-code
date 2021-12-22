@@ -5,10 +5,6 @@ Simple processing examples separated by different branches.
 ### master
 Master branch is always the working-on branch
 
-### [primary-view](https://github.com/amomorning/processing-code/tree/primary-view)
-Overview and template, an example from [processing.org](https://processing.org/examples/mousefunctions.html)
-![](https://github.com/amomorning/processing-code/blob/primary-view/fig/HWXu8aTBde.gif)
-
 ### [Reaction-Diffusion](https://github.com/amomorning/processing-code/tree/diffusion)
 ![](https://github.com/amomorning/processing-code/blob/diffusion/fig/SKo2w2KJSda.png)
 
