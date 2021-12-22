@@ -41,17 +41,13 @@ public class Show extends PApplet {
         segs[7] = createLineString(1, 30, 44, 30, divideNum);
         segs[8] = createLineString(0, 1, 0, 29, divideNum);
 
-
         buildVoronoi();
     }
 
 
     public void setup() {
         tools = new Tools(this, 100);
-
         colorMode(HSB, 100);
-
-        tools.cam.top();
     }
 
 
@@ -94,8 +90,6 @@ public class Show extends PApplet {
 
         GeometryFactory gf = new GeometryFactory();
         Coordinate[] p = new Coordinate[n + 1];
-
-
         for (int i = 0; i < n + 1; i++) {
             double t = i * 1.0 / n;
             p[i] = new Coordinate(x1 + t * (x2 - x1), y1 + t * (y2 - y1));
@@ -127,9 +121,7 @@ public class Show extends PApplet {
                 if (ply.intersects(segs[j])) idx[i] = j;
             }
         }
-        System.out.println(Arrays.toString(idx));
 
-//        outers = new LineString[segs.length];
         outers = new ArrayList<>();
         for (int j = 0; j < segs.length; ++j) {
             List<Polygon> tmp = new ArrayList<>();
@@ -140,22 +132,18 @@ public class Show extends PApplet {
             GeometryCollection gc = gf.createGeometryCollection(tmp.toArray(new Polygon[0]));
 
             Geometry boundary = gc.union().getBoundary();
-            if(Objects.equals(boundary.getGeometryType(), "LinearRing")) {
+            if (Objects.equals(boundary.getGeometryType(), "LinearRing")) {
                 outers.add((LineString) boundary);
 
-            } else if(Objects.equals(boundary.getGeometryType(), "MultiLineString")) {
-                for(int k = 0; k < boundary.getNumGeometries(); ++ k) {
+            } else if (Objects.equals(boundary.getGeometryType(), "MultiLineString")) {
+                for (int k = 0; k < boundary.getNumGeometries(); ++k) {
                     outers.add((LineString) boundary.getGeometryN(k));
                 }
             }
         }
-
-
     }
 
     public static void main(String[] args) {
         PApplet.main("main.Show");
     }
-
-
 }
