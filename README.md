@@ -1,3 +1,4 @@
-### hemesh
-HE_Mesh template with camera controller
-![](fig/XhpK4nms4w.gif)
+### Line Voronoi
+voroni cell from line segments
+
+![](fig/line-voronoi.png)
