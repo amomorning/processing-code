@@ -1,10 +1,14 @@
 package main;
 
 import Guo_Cam.CameraController;
+import Guo_Cam.Vec_Guo;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Polygon;
 import processing.core.PApplet;
-import wblut.hemesh.HEC_Cylinder;
-import wblut.hemesh.HES_CatmullClark;
-import wblut.hemesh.HE_Mesh;
+import wblut.geom.WB_Coord;
+import wblut.geom.WB_Point;
+import wblut.geom.WB_Polygon;
 import wblut.processing.WB_Render;
 import wblut.processing.WB_Render3D;
 
@@ -15,26 +19,32 @@ import wblut.processing.WB_Render3D;
  * @date: 2020/06/16
  */
 public class Show extends PApplet {
-    public HE_Mesh mesh;
     public WB_Render3D render;
     public CameraController cam;
     boolean flag = false;
+
+    public WB_Polygon ply;
+    int color = 255;
     public void settings() {
         size(1000, 1000, P3D);
         smooth(8);
     }
 
     public void setup() {
-        createMesh();
         cam = new CameraController(this, 1000);
 
-        HES_CatmullClark subdivide = new HES_CatmullClark();
-        subdivide.setKeepBoundary(true);// preserve position of vertices on a surface boundary
-        subdivide.setKeepEdges(true);// preserve position of vertices on edge of selection (only useful if using subdivideSelected)
-        subdivide.setBlendFactor(1.0); //controls how much the vertices are moved: 0.0=planar, 1.0=true Catmull-Clark
-        mesh.subdivide(subdivide, 3);
-
         render = new WB_Render(this);
+        cam.getCamera().setPosition(new Vec_Guo(0, 0, 1000));
+        cam.getCamera().setLookAt(new Vec_Guo(0, 0, 0));
+        cam.setRotateButton(10);
+
+        WB_Point[] pts = new WB_Point[5];
+        pts[0] = new WB_Point(0, 0, 0);
+        pts[1] = new WB_Point(100, 0, 0);
+        pts[2] = new WB_Point(100, 100, 0);
+        pts[3] = new WB_Point(50, 50, 0);
+        pts[4] = new WB_Point(0, 100, 0);
+        ply = new WB_Polygon(pts);
     }
 
 
@@ -42,24 +52,44 @@ public class Show extends PApplet {
 
         flag = true;
         background(55);
-        cam.drawSystem(1000);
-        directionalLight(255, 255, 255, 1, 1, -1);
-        directionalLight(127, 127, 127, -1, -1, 1);
+        fill(color);
+
+        render.drawPolygonEdges(ply);
+
+        cam.begin2d();
         fill(255);
-        noStroke();
-        render.drawFaces(mesh);
-        stroke(0);
-        render.drawEdges(mesh);
+        rect(0, 0, 100, 1000);
+        cam.begin3d();
+    }
+
+
+    public void mouseMoved() {
+        WB_Point pt = new WB_Point(cam.getCoordinateFromScreenOnXYPlaneDouble(mouseX, mouseY));
+
+        Polygon p = toJTSPolygon(ply);
+        Coordinate c = new Coordinate(pt.xd(), pt.yd());
+        GeometryFactory gf = new GeometryFactory();
+
+
+        if(p.contains(gf.createPoint(c))) {
+            color = 0;
+        } else {
+            color = 255;
+        }
 
     }
 
 
-    public void createMesh() {
-        HEC_Cylinder creator = new HEC_Cylinder();
-        creator.setFacets(6).setSteps(1).setRadius(250).setHeight(500).setCap(true, false);
-        mesh = new HE_Mesh(creator);
-    }
+    public static Polygon toJTSPolygon(WB_Polygon ply) {
+        WB_Coord[] polypt = ply.getPoints().toArray();
+        Coordinate[] pts = new Coordinate[polypt.length + 1];
 
+        for (int i = 0; i < polypt.length; ++i) {
+            pts[i] = new Coordinate(polypt[i].xd(), polypt[i].yd());
+        }
+        pts[polypt.length] = new Coordinate(polypt[0].xd(), polypt[0].yd());
+        return new GeometryFactory().createPolygon(pts);
+    }
 
 
 }
