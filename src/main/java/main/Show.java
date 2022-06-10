@@ -26,7 +26,9 @@ public class Show extends PApplet {
     public WB_Polygon ply;
     int color = 255;
     public void settings() {
-        size(1000, 1000, P3D);
+        size(600, 600, P3D);
+        System.out.println(displayDensity());
+        pixelDensity(displayDensity());
         smooth(8);
     }
 
